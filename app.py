@@ -1,97 +1,155 @@
-# app.py
-from db import insert_data, get_history
 from flask import Flask, render_template, request
-import os
-from db import insert_data
 
 from predict import predict_disease, predict_from_text
 from report_reader import read_report
 
+from db import insert_data, get_history
+from logger import log
+
+
 app = Flask(__name__)
-
-UPLOAD_FOLDER = "uploads"
-
-app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
 
 
 # -------------------------
-# Home
+# home
 # -------------------------
 
 @app.route("/")
 def home():
+
     return render_template("index.html")
 
 
 # -------------------------
-# Predict from symptoms
+# symptoms
 # -------------------------
 
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    symptoms = request.form.get("symptoms")
+    try:
 
-    symptom_list = symptoms.split(",")
+        symptoms = request.form.get("symptoms", "")
 
-    result = predict_disease(symptom_list)
+        data = predict_disease(symptoms)
 
-    insert_data(symptoms, "", result)
+        result = data["disease"]
+        score = data["score"]
+        top3 = data["top3"]
 
-    return render_template("index.html", result=result)
+        insert_data(symptoms, "", result)
+
+        return render_template(
+            "index.html",
+            result=result,
+            score=score,
+            top3=top3
+        )
+
+    except Exception as e:
+
+        log(str(e))
+
+        return render_template(
+            "index.html",
+            result="Error",
+            score=0
+        )
 
 
 # -------------------------
-# Predict from text
+# text
 # -------------------------
 
 @app.route("/predict_text", methods=["POST"])
 def predict_text():
 
-    text = request.form.get("report_text")
+    try:
 
-    result = predict_from_text(text)
+        text = request.form.get("report_text", "")
 
-    insert_data("", text, result)
+        data = predict_from_text(text)
 
-    return render_template("index.html", result=result)
+        result = data["disease"]
+        score = data["score"]
+        top3 = data["top3"]
+
+        insert_data("", text, result)
+
+        return render_template(
+            "index.html",
+            result=result,
+            score=score,
+            top3=top3
+        )
+
+    except Exception as e:
+
+        log(str(e))
+
+        return render_template(
+            "index.html",
+            result="Error",
+            score=0
+        )
 
 
 # -------------------------
-# Upload file
+# upload
 # -------------------------
 
 @app.route("/upload", methods=["POST"])
 def upload():
 
-    file = request.files["file"]
+    try:
 
-    if file.filename == "":
-        return render_template("index.html", result="No file")
+        file = request.files["file"]
 
-    path = os.path.join(app.config["UPLOAD_FOLDER"], file.filename)
+        text = read_report(file)
 
-    file.save(path)
+        data = predict_from_text(text)
 
-    text = read_report(path)
+        result = data["disease"]
+        score = data["score"]
+        top3 = data["top3"]
 
-    result = predict_from_text(text)
-    insert_data("", text, result)
+        insert_data("", text, result)
 
-    return render_template("index.html", result=result)
+        return render_template(
+            "index.html",
+            result=result,
+            score=score,
+            top3=top3
+        )
+
+    except Exception as e:
+
+        log(str(e))
+
+        return render_template(
+            "index.html",
+            result="Error",
+            score=0
+        )
 
 
 # -------------------------
-
-
+# history
+# -------------------------
 
 @app.route("/history")
 def history():
 
     data = get_history()
 
-    return render_template("history.html", data=data)
+    return render_template(
+        "history.html",
+        data=data
+    )
 
+
+# -------------------------
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+
+    app.run(debug=True)

@@ -2,23 +2,45 @@
 
 {% block content %}
 
-<h2 class="mb-4 text-center">
-AI Disease Detection System
-</h2>
+
+<!-- HERO -->
+
+<div class="hero">
+
+<div>
+
+<h1>Disease Detection AI</h1>
+
+<p>Smart AI Powered Medical Prediction</p>
+
+</div>
+
+</div>
+
+
+
+<!-- MAIN SECTION -->
+
+<div class="container section">
+
+<div class="row g-4">
 
 
 <!-- Symptoms -->
 
-<div class="card mb-4">
+<div class="col-md-4">
 
-<div class="card-body">
+<div class="card p-4">
 
-<h5>Enter Symptoms</h5>
+<h5>
+<i class="fa-solid fa-stethoscope"></i>
+Symptoms
+</h5>
 
 <form action="/predict" method="post">
 
 <input
-class="form-control mb-2"
+class="form-control mb-3"
 name="symptoms"
 placeholder="itching,skin_rash">
 
@@ -38,16 +60,19 @@ Predict
 
 <!-- Text -->
 
-<div class="card mb-4">
+<div class="col-md-4">
 
-<div class="card-body">
+<div class="card p-4">
 
-<h5>Enter Report Text</h5>
+<h5>
+<i class="fa-solid fa-file-medical"></i>
+Report Text
+</h5>
 
 <form action="/predict_text" method="post">
 
 <textarea
-class="form-control mb-2"
+class="form-control mb-3"
 name="report_text"></textarea>
 
 <button class="btn btn-main w-100">
@@ -66,11 +91,14 @@ Predict
 
 <!-- Upload -->
 
-<div class="card mb-4">
+<div class="col-md-4">
 
-<div class="card-body">
+<div class="card p-4">
 
-<h5>Upload Report</h5>
+<h5>
+<i class="fa-solid fa-upload"></i>
+Upload Report
+</h5>
 
 <form
 action="/upload"
@@ -80,7 +108,7 @@ enctype="multipart/form-data">
 <input
 type="file"
 name="file"
-class="form-control mb-2">
+class="form-control mb-3">
 
 <button class="btn btn-main w-100">
 
@@ -95,16 +123,130 @@ Upload
 </div>
 
 
+</div>
+
+
+
+<!-- RESULT -->
 
 {% if result %}
 
-<div class="alert alert-success">
+<div class="result-box mt-4">
 
-Result: {{ result }}
+<h4>Prediction Result</h4>
+
+<b>Disease:</b> {{ result }} <br>
+
+<b>Confidence:</b> {{ score }} %
 
 </div>
 
 {% endif %}
+
+
+
+<!-- TOP 3 -->
+
+{% if top3 %}
+
+<div class="result-box mt-3">
+
+<h5>Top Predictions</h5>
+
+<ul>
+
+{% for d in top3 %}
+
+<li>
+
+{{ d[0] }}
+
+( {{ (d[1]*100)|round(2) }} % )
+
+</li>
+
+{% endfor %}
+
+</ul>
+
+</div>
+
+{% endif %}
+
+
+</div>
+
+
+
+<!-- FEATURES -->
+
+<div class="features">
+
+<div class="container">
+
+<div class="row text-center">
+
+
+<div class="col-md-4">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-brain"></i>
+
+</div>
+
+<h4>AI Prediction</h4>
+
+<p>Machine learning based disease detection</p>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-file-medical"></i>
+
+</div>
+
+<h4>Report Analysis</h4>
+
+<p>Upload medical reports for analysis</p>
+
+</div>
+
+
+<div class="col-md-4">
+
+<div class="feature-icon">
+
+<i class="fa-solid fa-database"></i>
+
+</div>
+
+<h4>History</h4>
+
+<p>Store previous predictions</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- FOOTER -->
+
+<div class="footer">
+
+Disease Detection AI | Final Year Project
+
+</div>
 
 
 {% endblock %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Prediction History</h2>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>ID</th>
+<th>Symptoms</th>
+<th>Text</th>
+<th>Result</th>
+<th>Date</th>
+
+</tr>
+
+{% for row in data %}
+
+<tr>
+
+<td>{{ row[0] }}</td>
+<td>{{ row[1] }}</td>
+<td>{{ row[2] }}</td>
+<td>{{ row[3] }}</td>
+<td>{{ row[4] }}</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+{% endblock %}

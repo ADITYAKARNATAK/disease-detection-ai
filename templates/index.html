@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2 class="mb-4 text-center">
+AI Disease Detection System
+</h2>
+
+
+<!-- Symptoms -->
+
+<div class="card mb-4">
+
+<div class="card-body">
+
+<h5>Enter Symptoms</h5>
+
+<form action="/predict" method="post">
+
+<input
+class="form-control mb-2"
+name="symptoms"
+placeholder="itching,skin_rash">
+
+<button class="btn btn-main w-100">
+
+Predict
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<!-- Text -->
+
+<div class="card mb-4">
+
+<div class="card-body">
+
+<h5>Enter Report Text</h5>
+
+<form action="/predict_text" method="post">
+
+<textarea
+class="form-control mb-2"
+name="report_text"></textarea>
+
+<button class="btn btn-main w-100">
+
+Predict
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+<!-- Upload -->
+
+<div class="card mb-4">
+
+<div class="card-body">
+
+<h5>Upload Report</h5>
+
+<form
+action="/upload"
+method="post"
+enctype="multipart/form-data">
+
+<input
+type="file"
+name="file"
+class="form-control mb-2">
+
+<button class="btn btn-main w-100">
+
+Upload
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+
+{% if result %}
+
+<div class="alert alert-success">
+
+Result: {{ result }}
+
+</div>
+
+{% endif %}
+
+
+{% endblock %}

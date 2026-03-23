@@ -1,6 +1,7 @@
 venv/
 __pycache__/
 *.pyc
-database.db
-uploads/
 dataset/
+uploads/
+database.db
+model.pkl
